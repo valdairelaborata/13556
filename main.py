@@ -17,5 +17,6 @@ class Carro:
 
 celta = Carro("Vermelha", "AKH 2522", "desligado", "hatch")
 fusca = Carro("Preta", "XTO 2536", "Ligado", "1500")
+
 celta.ligar()
 fusca.desligar()
