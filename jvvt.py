@@ -1,32 +1,37 @@
-class Calculadora:
+class Conta:
  
-    def add(self, a, b):
-        return a + b
+    def __init__(self, titular, saldo_inicial = 0):
+        self.titular = titular
+        self.saldo = saldo_inicial
  
-    def sub(self, a, b):
-        return a - b
+    def depositar(self, valor):
+        if valor > 0:
+            self.saldo + valor
+            print(f'Depósito de {valor} reais realizado')
+        else:
+            print('O valor do depósito não deve ser negativo')
  
-    def mult(self, a, b):
-        return a * b
+    def sacar(self, valor):
+        if self.saldo >= valor:
+            print(f'Você conseguiu sacar {valor} reais')
+        else:
+            print('Seu saldo não pode ficar abaixo de zero')
+   
+    def extrato(self):
+        print("extrato")
+        print(f"Titular: {self.titular}")
+        print(f"Saldo atual: R$ {self.saldo: } \n")
  
-    def div(self, a, b):
-        return a / b
+
+
+conta = Conta(titular = "jvvt", saldo_inicial = 10)
+conta.extrato()
  
+valor_deposito = float(input("Digite o valor para depósito: "))
+conta.depositar(valor_deposito)
+conta.extrato()
  
-calculadora = Calculadora()
-numero1 = float(input("Digite o primeiro número: "))
+valor_saque = float(input("Digite o valor para saque: "))
+conta.sacar(valor_saque)
+conta.extrato()
  
-numero2 = float(input("Digite o segundo número: "))
- 
-resultado_add = calculadora.add(numero1, numero2)
- 
-resultado_sub = calculadora.sub(numero1, numero2)
- 
-resultado_mult = calculadora.mult(numero1, numero2)
- 
-resultado_div = calculadora.div(numero1, numero2)
- 
-print(f"{resultado_add}")
-print(f"{resultado_sub}")
-print(f"{resultado_mult}")
-print(f"{resultado_div}")
