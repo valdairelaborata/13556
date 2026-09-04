@@ -1,37 +1,42 @@
-class Conta:
- 
-    def __init__(self, titular, saldo_inicial = 0):
-        self.titular = titular
-        self.saldo = saldo_inicial
- 
-    def depositar(self, valor):
-        if valor > 0:
-            self.saldo + valor
-            print(f'Depósito de {valor} reais realizado')
-        else:
-            print('O valor do depósito não deve ser negativo')
- 
-    def sacar(self, valor):
-        if self.saldo >= valor:
-            print(f'Você conseguiu sacar {valor} reais')
-        else:
-            print('Seu saldo não pode ficar abaixo de zero')
-   
-    def extrato(self):
-        print("extrato")
-        print(f"Titular: {self.titular}")
-        print(f"Saldo atual: R$ {self.saldo: } \n")
- 
+class Carro:
+    def __init__(self, marca, modelo, ano):
+        self.marca = marca
+        self.modelo = modelo
+        self.ano = ano
+    
+    def descricao(self):
+        return f'{self.marca} {self.modelo} {self.ano}'
 
 
-conta = Conta(titular = "jvvt", saldo_inicial = 10)
-conta.extrato()
- 
-valor_deposito = float(input("Digite o valor para depósito: "))
-conta.depositar(valor_deposito)
-conta.extrato()
- 
-valor_saque = float(input("Digite o valor para saque: "))
-conta.sacar(valor_saque)
-conta.extrato()
- 
+# class Esportivo(Carro):
+#     def __init__(self, marca, modelo, ano, velocidade_maxima):
+#         super().__init__(marca, modelo, ano)
+#         self.velocidade_maxima = velocidade_maxima
+
+#     def descricao(self):
+#         return super().descricao() + f' Velocidade máxima: {self.velocidade_maxima}'
+
+
+class Esportivo(Carro):   
+    def __init__(self, marca, modelo, ano, velocidade_maxima):
+        super().__init__(marca, modelo, ano)
+        self.velocidade_maxima = velocidade_maxima
+    
+    def descricao(self):
+        return super().descricao() + f' Velocidade máxima: {self.velocidade_maxima}'
+
+
+class Sedan(Carro):
+    def __init__(self, marca, modelo, ano, tamanho_porta_malas):        
+        super().__init__(marca, modelo, ano)
+        self.tamanho_porta_malas = tamanho_porta_malas
+    
+    def descricao(self):
+        return super().descricao() + f' Tamanho do porta malas: {self.tamanho_porta_malas}'
+
+
+uno_escada = Esportivo("Fiat", "Uno", 1994, 100000)
+uno_descricao = uno_escada.descricao()
+
+virtus = Sedan("Volkswagem", "Virtus", 2018, "521L")
+print(virtus.descricao())
