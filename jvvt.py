@@ -29,5 +29,7 @@ joao = ContaBancaria('João')
  
 joao.depositar(10)
 joao.sacar(3)
+
+joao.titular = "Ana"
  
 print(joao.saldo)
