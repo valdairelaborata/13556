@@ -23,7 +23,9 @@ class ContaBancaria:
         self.__saldo += valor
  
     def sacar(self, valor):
-        self.__saldo -= valor
+        if valor <= self.__saldo:        
+            self.__saldo -= valor
+        
 
 
 

@@ -8,27 +8,30 @@ class ContaBancaria:
     def saldo(self):
         return self.__saldo
  
- 
-    @saldo.setter
-    def saldo(self, valor):
-        if valor >= 0:
-            self.__saldo = valor
-        else:
-            print("O saldo não pode ficar negativo !")
-       
- 
     def depositar(self, valor):
-        self.saldo += valor
+        self.__saldo += valor
+ 
+    # def sacar(self, valor):
+    #     if valor >= Cnt_Bancaria.saldo:
+    #         self.__saldo -= valor
+ 
+class cnt_corrente:
+    def __init__(self, titular, conta, saldo=0):
+        super().__init__(titular, conta, saldo)
  
     def sacar(self, valor):
-        self.__saldo -= valor
+        # permite sacar até saldo + limite
+        if valor > self.saldo:
+            self.saldo -= valor
+            print(f"Saque de R${valor} realizado. Saldo atual: R${self.saldo}")
  
-   
+ 
 Cnt_Bancaria = ContaBancaria('Isabella', '00001')
+ 
 Cnt_Bancaria.depositar(5000)
  
 print(Cnt_Bancaria.saldo)
  
-Cnt_Bancaria.sacar(1500)
+Cnt_Bancaria.sacar(6500)
  
 print(Cnt_Bancaria.saldo)

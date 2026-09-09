@@ -34,6 +34,8 @@ meu_carro = Carro("Toyota", "Corola")
 meu_carro.acelerar(10)
 meu_carro.frear(2)
 
+meu_carro.nivel_combustivel = 222
+
 
 
 print(meu_carro.nivel_combustivel)
