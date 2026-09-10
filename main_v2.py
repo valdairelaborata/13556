@@ -1,9 +1,12 @@
 
-class Carro:
+class Carro(object):
     def __init__(self, marca, modelo):
         self.marca = marca
         self.modelo = modelo
         self.__velocidade = 0   
+
+    # def __del__(self):
+    #     print(f'{self.marca} está sendo excluído')
 
     @property
     def velocidade(self):
@@ -30,14 +33,30 @@ class Carro:
     def __verificar_combustivel(self):
         return "10L"
 
+    def __eq__(self, value):
+        if self.marca == value.marca:
+            print("Marca é igual")
+        else:
+            print("Marca é diferente")
+
+        if self.modelo == value.modelo:
+            print("Modelo é igual")
+        else:
+            print("Modelo é diferente")
+
+        return self.marca == value.marca and self.modelo == value.modelo
+
+
+    # def __str__(self):
+    #     return f'{self.marca} - {self.modelo}'
+
+
+
 meu_carro = Carro("Toyota", "Corola")
-meu_carro.acelerar(10)
-meu_carro.frear(2)
+teu_carro = Carro("Toyota", "Yaris")
+# del meu_carro
 
-meu_carro.nivel_combustivel = 222
+sao_iguais = meu_carro == teu_carro
 
-
-
-print(meu_carro.nivel_combustivel)
-
+print(sao_iguais)
 
