@@ -54,9 +54,14 @@ class Carro(object):
 
 meu_carro = Carro("Toyota", "Corola")
 teu_carro = Carro("Toyota", "Yaris")
+carro_maria = Carro("Chevrolet", "Celta")
 # del meu_carro
 
-sao_iguais = meu_carro == teu_carro
+# sao_iguais = meu_carro == teu_carro
+
+sao_iguais = meu_carro.marca == teu_carro.marca and meu_carro.modelo == teu_carro.modelo
+
+meu_carro_igual_dela = teu_carro == carro_maria
 
 print(sao_iguais)
 
