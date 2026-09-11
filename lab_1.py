@@ -22,6 +22,7 @@ def requer_autenticacao(funcao):
     return autenticar
 
 
+
 @requer_autenticacao
 def abrir_painel(usuario, painel):
     print(f"Abrindo o painel {painel} para o usuário {usuario}.")
