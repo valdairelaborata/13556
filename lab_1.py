@@ -1,1 +1,4 @@
 # 1- Crie um decorador que verifica se o usuário está autenticado antes de executar uma função.
+
+
+
