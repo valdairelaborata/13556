@@ -1,4 +1,4 @@
-enha = 1234
+senha = 1234
 class Usuario:
     def __init__ (self, login:str, senha:int):
         self.login = login
