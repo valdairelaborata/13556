@@ -1,16 +1,13 @@
+import requests
 
 
-def aplicar(funcao, valor):
-    return funcao(valor)
+url = "https://jsonplaceholder.typicode.com/posts/1"
 
-def dobrar(numero):
-    return numero * 2
+response = requests.get(url)
 
-def triplicar(numero):
-    return numero * 3
-
-resultado1 = aplicar(dobrar, 5)
-resultado2 = aplicar(triplicar, 5)
-
-print(resultado1)
-print(resultado2)
+if response.status_code == 200:
+    data = response.json()
+    print(f'Título: {data["title"]}')   
+    
+else:
+    print(f"Erro. Status code: {response.status_code}")
