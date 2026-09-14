@@ -1,20 +1,10 @@
-senha = 1234
-class Usuario:
-    def __init__ (self, login:str, senha:int):
-        self.login = login
-        self.senha = senha
-   
-def requer_autenticacao(funcao):
-    def validar(usuario, painel):
-        if requer_autenticacao:
-            print('Usúario autenticado')
-            funcao(usuario, painel)
-        else:
-            print('Acesso negado. Usúario não identificado.')
-    return validar
+import requests
  
-@requer_autenticacao
-def abrir_painel(usuario, painel):
-    print('Abriu o painel')
+url = 'https://viacep.com.br/ws/82640000/json/'
  
-abrir_painel()
+response = requests.get(url)
+ 
+if response.status_code == 200:
+    data = response.json()
+    print(f'CEP: {data["cep"]}')    
+
