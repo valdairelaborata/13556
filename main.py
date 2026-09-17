@@ -1,7 +1,9 @@
 
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from model import Base
+from model import Base, Cliente
+from produto_model import Base, Produto
 
 
 DATABASE_URL = "sqlite:///database.db"  
@@ -9,3 +11,17 @@ DATABASE_URL = "sqlite:///database.db"
 engine = create_engine(DATABASE_URL)
 
 Base.metadata.create_all(engine)
+
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+db = SessionLocal()
+
+# novo_cliente = Cliente(nome="João Silva", email="jvvtgmail.com")
+# db.add(novo_cliente)
+# db.commit()
+
+novo_produto = Produto(nome="Produto A", preco=10.99)
+db.add(novo_produto)
+db.commit()
+
