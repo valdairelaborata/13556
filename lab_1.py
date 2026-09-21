@@ -2,7 +2,7 @@
 
 
 import unittest
-
+import gerso
 
 class ContaBancaria:
     def __init__(self, titular: str):
@@ -25,7 +25,7 @@ class ContaBancaria:
             return 'Saldo insuficiente'
       
 
-class Teste_ContaBancaria(unittest.TestCase):
+class Teste_ContaBancaria(gerso.TestCase):
 
     def test_depositar(self):
         conta = ContaBancaria("João")
