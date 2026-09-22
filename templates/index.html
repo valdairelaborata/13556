@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-<section class="intro"><p class="eyebrow">Gestão de contatos</p><h1>Clientes e endereços</h1><p class="subtitle">Mantenha seus contatos organizados em um só lugar.</p></section>
-{% if clients %}
-<section class="table-wrap"><table><thead><tr><th>Cliente</th><th>Telefone</th><th>Endereço</th><th>Ações</th></tr></thead><tbody>
-{% for client in clients %}<tr><td><strong>{{ client.nome }}</strong><small>{{ client.email }}</small></td><td>{{ client.telefone or 'Não informado' }}</td><td>{% if client.logradouro %}{{ client.logradouro }}, {{ client.numero }}{% if client.complemento %}, {{ client.complemento }}{% endif %}<br><small>{{ client.bairro }} · {{ client.cidade }}/{{ client.estado }} · {{ client.cep }}</small>{% else %}Não informado{% endif %}</td><td class="actions"><a href="{{ url_for('edit_client_page', client_id=client.id) }}">Editar</a><form method="post" action="{{ url_for('delete_client_page', client_id=client.id) }}" onsubmit="return confirm('Excluir este cliente?')"><button class="link-danger" type="submit">Excluir</button></form></td></tr>{% endfor %}
-</tbody></table></section>
-{% else %}<section class="empty"><h2>Nenhum cliente cadastrado</h2><p>Comece adicionando seu primeiro cliente.</p><a class="button primary" href="{{ url_for('new_client_page') }}">Cadastrar cliente</a></section>{% endif %}
-{% endblock %}
