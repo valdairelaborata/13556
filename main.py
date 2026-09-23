@@ -30,11 +30,19 @@ def lista_clientes():
 
 @app.get("/clientes/{cliente_id}")
 def busca_cliente(cliente_id: str):
-    return {"cliente": f"cliente {cliente_id} encontrado"}  
+    db = SessionLocal()
+    cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
+    db.close()
+    return {"cliente": cliente}  
 
 
-@app.put("/clientes")
-def alterar_cliente():
+@app.put("/clientes/{cliente_id}")
+def alterar_cliente(cliente_id: str):
+    db = SessionLocal()
+    cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
+    cliente.nome = "João Silva Atualizado"
+    db.commit()
+    db.close()
     return {"alterar": "cliente alterado"}
 
 @app.delete("/clientes")
@@ -45,3 +53,4 @@ def exluir_cliente():
 def criar_cliente():
     return {"criar": "cliente criado"}
 
+ 
