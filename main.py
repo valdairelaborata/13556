@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
+from pydantic import BaseModel
 
 from model import Base, Cliente
 from produto_model import Base, Produto
@@ -17,6 +18,10 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 app = FastAPI() 
+
+class ClienteView(BaseModel):
+    nome: str
+    email: str
 
 
 
@@ -50,7 +55,12 @@ def exluir_cliente():
     return {"excluir": "cliente excluido"}
 
 @app.post("/clientes")
-def criar_cliente():
+def criar_cliente(dados: ClienteView):
+    db = SessionLocal()
+    novo_cliente = Cliente(nome=dados.nome, email=dados.email)
+    db.add(novo_cliente)
+    db.commit()
+    db.close()
     return {"criar": "cliente criado"}
 
  
