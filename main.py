@@ -1,4 +1,4 @@
-
+from fastapi import FastAPI
 from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
 
@@ -15,31 +15,33 @@ Base.metadata.create_all(engine)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-db = SessionLocal()
 
-# novo_cliente = Cliente(nome="João Silva", email="jvvtgmail.com")
-# db.add(novo_cliente)
-# db.commit()
-
-# clientes = db.query(Cliente).all()    
-
-# cliente = db.query(Cliente).
-# filter(Cliente.nome == "João Silva").first()
-
-# cliente = db.query(Cliente).filter(Cliente.id == 1).first()
-
-# cliente.nome = "João Silva Atualizado"
-# cliente.email = "joao.silva.atualizado@gmail.com"
-
-cliente = db.query(Cliente).filter(Cliente.id == 1).first()
-
-db.delete(cliente)
-db.commit() 
+app = FastAPI() 
 
 
-# novo_produto = Produto(nome="Produto A", preco=10.99)
-# db.add(novo_produto)
-# db.commit()
 
-db.close()
+@app.get("/clientes")
+def lista_clientes():
+    db = SessionLocal()
+    clientes = db.query(Cliente).all()
+    db.close()
+    return {"clientes": clientes}
+
+
+@app.get("/clientes/{cliente_id}")
+def busca_cliente(cliente_id: str):
+    return {"cliente": f"cliente {cliente_id} encontrado"}  
+
+
+@app.put("/clientes")
+def alterar_cliente():
+    return {"alterar": "cliente alterado"}
+
+@app.delete("/clientes")
+def exluir_cliente():
+    return {"excluir": "cliente excluido"}
+
+@app.post("/clientes")
+def criar_cliente():
+    return {"criar": "cliente criado"}
 
