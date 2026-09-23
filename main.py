@@ -42,16 +42,22 @@ def busca_cliente(cliente_id: str):
 
 
 @app.put("/clientes/{cliente_id}")
-def alterar_cliente(cliente_id: str):
+def alterar_cliente(cliente_id: str, dados: ClienteView):
     db = SessionLocal()
     cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
-    cliente.nome = "João Silva Atualizado"
+    cliente.nome = dados.nome
+    cliente.email = dados.email
     db.commit()
     db.close()
     return {"alterar": "cliente alterado"}
 
-@app.delete("/clientes")
-def exluir_cliente():
+@app.delete("/clientes/{cliente_id}")
+def exluir_cliente(cliente_id: str):
+    db = SessionLocal()
+    cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
+    db.delete(cliente)
+    db.commit()
+    db.close()
     return {"excluir": "cliente excluido"}
 
 @app.post("/clientes")
