@@ -17,9 +17,9 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 db = SessionLocal()
 
-# novo_cliente = Cliente(nome="João Silva", email="jvvtgmail.com")
-# db.add(novo_cliente)
-# db.commit()
+novo_cliente = Cliente(nome="João Silva", email="jvvtgmail.com")
+db.add(novo_cliente)
+db.commit()
 
 # clientes = db.query(Cliente).all()    
 

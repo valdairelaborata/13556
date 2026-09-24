@@ -3,8 +3,9 @@ from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel
 
-# from model import Base, Cliente
-from produto_model import Base, Produto
+
+# from produto_model import Base, Produto
+from model import Base, Cliente, Endereco
 
 
 DATABASE_URL = "sqlite:///database.db"  
@@ -19,10 +20,21 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 app = FastAPI() 
 
-class ClienteView(BaseModel):
+class ClienteViewBase(BaseModel):    
     nome: str
     email: str
+    
 
+class ClienteViewInclude(ClienteViewBase):    
+    endereco_id: int
+
+class ClienteViewGet(ClienteViewBase):    
+    endereco: str
+
+
+class EnderecoView(BaseModel):
+    rua: str
+    numero: str
 
 
 @app.get("/clientes")
@@ -38,11 +50,18 @@ def busca_cliente(cliente_id: str):
     db = SessionLocal()
     cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
     db.close()
-    return {"cliente": cliente}  
+
+    cliente_view = ClienteViewGet()
+    cliente_view.nome = cliente.nome
+    cliente_view.email = cliente.email  
+    cliente_view.endereco = cliente.endereco.rua + ", " + cliente.endereco.numero 
+
+
+    return {"cliente": cliente_view}  
 
 
 @app.put("/clientes/{cliente_id}")
-def alterar_cliente(cliente_id: str, dados: ClienteView):
+def alterar_cliente(cliente_id: str, dados: ClienteViewInclude):
     db = SessionLocal()
     cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
     cliente.nome = dados.nome
@@ -61,12 +80,33 @@ def exluir_cliente(cliente_id: str):
     return {"excluir": "cliente excluido"}
 
 @app.post("/clientes")
-def criar_cliente(dados: ClienteView):
+def criar_cliente(dados: ClienteViewInclude):
     db = SessionLocal()
-    novo_cliente = Cliente(nome=dados.nome, email=dados.email)
+    endereco = db.query(Endereco).filter(Endereco.id == dados.endereco_id).first()  
+    if not endereco:
+        db.close()
+        return {"error": "Endereço não encontrado"}
+    
+    novo_cliente = Cliente(nome=dados.nome, email=dados.email, endereco_id=dados.endereco_id)
     db.add(novo_cliente)
     db.commit()
     db.close()
     return {"criar": "cliente criado"}
 
- 
+
+@app.post("/enderecos")
+def criar_endereco(endereco: EnderecoView):
+    db = SessionLocal()
+    novo_endereco = Endereco(rua=endereco.rua, numero=endereco.numero)
+    db.add(novo_endereco)
+    db.commit()
+    db.close()
+    return {"criar": "endereco criado"}
+
+
+@app.get("/enderecos/{id}")
+def buscar_endereco(id: int):
+    db = SessionLocal()
+    endereco = db.query(Endereco).filter(Endereco.id == id).first()
+    db.close()
+    return {"endereco": endereco}
