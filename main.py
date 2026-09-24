@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel
 
-from model import Base, Cliente
+# from model import Base, Cliente
 from produto_model import Base, Produto
 
 
