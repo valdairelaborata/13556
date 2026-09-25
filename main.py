@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 # from produto_model import Base, Produto
@@ -28,8 +28,12 @@ class ClienteViewBase(BaseModel):
 class ClienteViewInclude(ClienteViewBase):    
     endereco_id: int
 
-class ClienteViewGet(ClienteViewBase):    
+class ClienteViewGet(ClienteViewBase):       
     endereco: str
+
+
+class ClienteResponse(BaseModel):
+    cliente: ClienteViewGet
 
 
 class EnderecoView(BaseModel):
@@ -45,16 +49,20 @@ def lista_clientes():
     return {"clientes": clientes}
 
 
-@app.get("/clientes/{cliente_id}")
+@app.get("/clientes/{cliente_id}", response_model=ClienteResponse)
 def busca_cliente(cliente_id: str):
     db = SessionLocal()
     cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
-    db.close()
+    if not cliente:
+        db.close()
+        return {"cliente": None}
 
-    cliente_view = ClienteViewGet()
-    cliente_view.nome = cliente.nome
-    cliente_view.email = cliente.email  
-    cliente_view.endereco = cliente.endereco.rua + ", " + cliente.endereco.numero 
+    cliente_view = ClienteViewGet(
+        nome=cliente.nome,
+        email=cliente.email,
+        endereco=cliente.endereco.rua + ", " + cliente.endereco.numero,
+    )
+    db.close()
 
 
     return {"cliente": cliente_view}  
