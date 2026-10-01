@@ -1,5 +1,6 @@
 from collections.abc import Generator
 import logging
+import os
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -11,8 +12,11 @@ from sqlalchemy.orm import Session, sessionmaker
 from jvvt import Base, Biblioteca, Cliente, Emprestimo, EnderecoCliente, Livro, StatusEmprestimo
 
 logger = logging.getLogger(__name__)
-DATABASE_URL = "sqlite:///jvvt.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///jvvt.db").strip()
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite:") else {}
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 with engine.begin() as connection:
