@@ -4,7 +4,7 @@ import logging
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
-from sqlalchemy import create_engine, func, inspect
+from sqlalchemy import create_engine, func, inspect, text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -322,6 +322,38 @@ def listar_livros_disponiveis(db: Session = Depends(get_db)) -> list[Livro]:
 @app.get("/livros/emprestados", response_model=list[LivroOutput], tags=["Livros"])
 def listar_livros_emprestados(db: Session = Depends(get_db)) -> list[Livro]:
     return db.query(Livro).filter(Livro.emprestimos.any(emprestimo_em_aberto())).all()
+
+
+@app.get("/livros/sql/disponiveis", response_model=list[LivroOutput], tags=["Livros"])
+def listar_livros_disponiveis_sql(db: Session = Depends(get_db)) -> list[Livro]:
+    consulta = text("""
+        SELECT livro.*
+        FROM livro
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM emprestimo
+            JOIN status_emprestimo ON status_emprestimo.id = emprestimo.status_id
+            WHERE emprestimo.livro_id = livro.id
+              AND lower(trim(status_emprestimo.status)) IN ('aberto', 'em aberto')
+        )
+    """)
+    return db.query(Livro).from_statement(consulta).all()
+
+
+@app.get("/livros/sql/emprestados", response_model=list[LivroOutput], tags=["Livros"])
+def listar_livros_emprestados_sql(db: Session = Depends(get_db)) -> list[Livro]:
+    consulta = text("""
+        SELECT livro.*
+        FROM livro
+        WHERE EXISTS (
+            SELECT 1
+            FROM emprestimo
+            JOIN status_emprestimo ON status_emprestimo.id = emprestimo.status_id
+            WHERE emprestimo.livro_id = livro.id
+              AND lower(trim(status_emprestimo.status)) IN ('aberto', 'em aberto')
+        )
+    """)
+    return db.query(Livro).from_statement(consulta).all()
 
 
 @app.get("/livros/{livro_id}", response_model=LivroOutput, tags=["Livros"])
